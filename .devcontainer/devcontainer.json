@@ -1,0 +1,6 @@
+{
+    "image" : "middleware",
+    "forwardPorts": [8080],
+    "runArgs": ["--name", "middleware"],
+    
+}

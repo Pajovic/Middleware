@@ -3,11 +3,13 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"middleware/config"
 	"middleware/model"
 	"middleware/service"
 	"net/http"
 	"sort"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -30,6 +32,7 @@ func (controller *TournamentController) GetTopMatches(w http.ResponseWriter, r *
 	if !ok {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("missing service id"))
+		return
 	}
 	rsid, ok := vars["rcid"]
 	if !ok {
@@ -63,35 +66,28 @@ func (controller *TournamentController) GetTopMatches(w http.ResponseWriter, r *
 	}
 }
 
-const layout = "01/02/06"
+const _layout = "02/01/06"
 
-func SortMatches(matches []model.Match, num int) []model.Match {
-	sortedTopMatches := make([]model.Match, num)
+func SortMatches(matches []model.Match, limit int) []model.Match {
+	var sortedTopMatches []model.Match // Len not set, since there can be less matches than the number of limit
 	sort.Slice(matches, func(i, j int) bool {
 		return matches[i].PlayTime.UTS > matches[j].PlayTime.UTS
 	})
-
 	for _, match := range matches {
-		if match.ID == 0 {
+		if len(sortedTopMatches) == limit {
+			break
+		}
+		t, err := time.Parse(_layout, match.PlayTime.Date)
+		if err != nil {
+			log.Printf("[SortMatches] Could not parse date for match id %d: %s", match.ID, err.Error())
+			continue
+		}
+
+		if t.After(time.Now()) {
+			//Skip this match
 			continue
 		}
 		sortedTopMatches = append(sortedTopMatches, match)
-		if len(sortedTopMatches) == num {
-			break
-		}
-		// t, err := time.Parse(layout, match.PlayTime.Date)
-		// if err != nil {
-		// 	log.Printf("err: %s", err.Error())
-		// 	continue
-		// }
-		// if t.After(time.Now()) {
-		// 	log.Printf("Match not yet held")
-		// 	continue
-		// }
-		// sortedTopMatches = append(sortedTopMatches, match)
-		// if len(sortedTopMatches) == num {
-		// 	break
-		// }
 	}
 	return sortedTopMatches
 }

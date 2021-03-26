@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	config.Load("middleware.conf")
+	config.Load("/config/middleware.conf")
 
 	httpHandler := handler.NewHttpHandler()
 	tournamentService := service.NewTournamentService(httpHandler)

@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -17,10 +16,5 @@ func NewHttpHandler() HTTPHandler {
 }
 
 func (handler *httpHandler) Get(url string) (*http.Response, error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		log.Printf("[httpHandler Get] Failed retrieving data from endpoint: %s", err.Error())
-		return nil, err
-	}
-	return resp, nil
+	return http.Get(url)
 }
