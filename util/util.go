@@ -11,6 +11,7 @@ import (
 
 const _dateLayout = "02/01/06"
 
+// SortMatches sorts limit number of matches by date descending.
 func SortMatches(matches []model.Match, limit int) []model.Match {
 	if limit < 0 {
 		return nil
@@ -37,6 +38,8 @@ func SortMatches(matches []model.Match, limit int) []model.Match {
 	return sortedTopMatches
 }
 
+// GetYears converts string tournamentYear, which can e.g be like 2020 or 20/21 and returns an array of
+// int values. Negative numbers are discarded.
 func GetYears(tournamentYear string) []int64 {
 	if tournamentYear == "" {
 		return nil
