@@ -15,7 +15,7 @@ func SortMatches(matches []model.Match, limit int) []model.Match {
 	if limit < 0 {
 		return nil
 	}
-	var sortedTopMatches []model.Match // Len not set, since there can be less matches than the number of the limit
+	var sortedTopMatches []model.Match // Len not set, since there could be less matches than the number of the limit
 	sort.Slice(matches, func(i, j int) bool {
 		return matches[i].PlayTime.UTS > matches[j].PlayTime.UTS
 	})

@@ -49,6 +49,12 @@ func TestSortMatches(t *testing.T) {
 			SortedIDs: []int{5},
 		},
 		{
+			Name:      "limit greated than the number of mathes",
+			Limit:     50,
+			Matches:   getTestMatches(),
+			SortedIDs: []int{5, 4, 2},
+		},
+		{
 			Name:      "5 matches, 2 not yet played, should return 3 sorted",
 			Limit:     5,
 			Matches:   getTestMatches(),

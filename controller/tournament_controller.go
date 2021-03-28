@@ -43,7 +43,7 @@ func (controller *TournamentController) GetTopMatches(w http.ResponseWriter, r *
 		return
 	}
 	for _, tournament := range tournaments {
-		//A tournament can be played in the course of 1-2 years
+		//1 tournament could be held during 2 years e.g 20/21
 		years := util.GetYears(tournament.Year)
 		if len(years) == 0 {
 			continue

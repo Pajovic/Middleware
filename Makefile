@@ -30,4 +30,5 @@ deploy:
 run:
 	echo "Starting docker container $(BIN_NAME)..."
 	docker run -d --name $(BIN_NAME) -p 8080:8080 $(BIN_NAME)
+
 .PHONY: run
