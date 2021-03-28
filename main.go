@@ -33,7 +33,7 @@ func defaultMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		log.Printf("Called request: %s %s", r.Method, r.URL.Path)
-		log.Printf("RemoteAddr %s", r.RemoteAddr)
+		log.Printf("Remote address: %s", r.RemoteAddr)
 		next.ServeHTTP(w, r)
 	})
 }

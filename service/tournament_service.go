@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"middleware/config"
 	"middleware/handler"
 	"middleware/model"
 	"net/http"
@@ -20,7 +21,8 @@ func NewTournamentService(httpHandler handler.HTTPHandler) TournamentService {
 	}
 }
 
-func (service *TournamentService) GetTournaments(url string) ([]model.Tournament, int, error) {
+func (service *TournamentService) GetTournaments(serviceID, realCategoryID string) ([]model.Tournament, int, error) {
+	url := fmt.Sprintf("%s/%s/%s", config.Conf.ConfigTournamentsPath, serviceID, realCategoryID)
 	resp, err := service.httpHandler.Get(url)
 	if err != nil {
 		log.Printf("[GetTournaments] Failed retrieving data from endpoint: %s", err.Error())
@@ -34,13 +36,13 @@ func (service *TournamentService) GetTournaments(url string) ([]model.Tournament
 		return nil, http.StatusInternalServerError, err
 	}
 	if err = json.Unmarshal(body, &main); err != nil {
-		log.Printf("[GetTournaments] Error unmarshaling: %s", err.Error())
+		log.Printf("[GetTournaments] Error unmarshaling tournament %s/%s:  %s", serviceID, realCategoryID, err.Error())
 		return nil, http.StatusInternalServerError, err
 	}
 	if len(main.Doc) == 0 {
-		errMsg := "[GetTournaments] Missing doc"
+		errMsg := fmt.Sprintf("[GetTournaments] Missing doc for tournament %s/%s", serviceID, realCategoryID)
 		log.Print(errMsg)
-		return nil, http.StatusInternalServerError, fmt.Errorf(errMsg)
+		return nil, http.StatusNotFound, fmt.Errorf(errMsg)
 	}
 
 	tournaments := make([]model.Tournament, len(main.Doc[0].Data.Tournaments))

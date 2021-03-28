@@ -9,12 +9,15 @@ type HTTPHandler interface {
 }
 
 type httpHandler struct {
+	httpClient *http.Client
 }
 
 func NewHttpHandler() HTTPHandler {
-	return &httpHandler{}
+	return &httpHandler{
+		httpClient: &http.Client{},
+	}
 }
 
 func (handler *httpHandler) Get(url string) (*http.Response, error) {
-	return http.Get(url)
+	return handler.httpClient.Get(url)
 }

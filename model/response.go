@@ -1,6 +1,7 @@
 package model
 
 type MatchResponse struct {
-	TournamentID int     `json:"tid"`
-	Matches      []Match `json:"matches"`
+	TournamentID   int64   `json:"tid"`
+	TournamentName string  `json:"name"`
+	Matches        []Match `json:"matches"`
 }

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"middleware/config"
 	"middleware/handler"
 	"middleware/model"
 	"net/http"
@@ -20,7 +21,8 @@ func NewMatchService(httpHandler handler.HTTPHandler) MatchService {
 	}
 }
 
-func (service *MatchService) GetMatches(url string) ([]model.Match, int, error) {
+func (service *MatchService) GetMatches(tournamentID, year int64) ([]model.Match, int, error) {
+	url := fmt.Sprintf("%s/%d/%d", config.Conf.FixturesTournamentPath, tournamentID, year)
 	resp, err := service.httpHandler.Get(url)
 	if err != nil {
 		log.Printf("[GetMatches] Failed retrieving data from endpoint: %s", err.Error())
@@ -30,15 +32,15 @@ func (service *MatchService) GetMatches(url string) ([]model.Match, int, error) 
 	var main model.MatchMain
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("[GetMatches] ReadAll failed: %s", err.Error())
+		log.Printf("[GetMatches] ReadAll failed for tournament %d: %s", tournamentID, err.Error())
 		return nil, http.StatusInternalServerError, err
 	}
 	if err = json.Unmarshal(body, &main); err != nil {
-		log.Printf("[GetMatches] Error unmarshaling match: %s", err.Error())
+		log.Printf("[GetMatches] Error unmarshaling tournament %d match: %s", tournamentID, err.Error())
 		return nil, http.StatusOK, nil
 	}
 	if len(main.Doc) == 0 {
-		errMsg := "[GetMatches] Missing doc"
+		errMsg := fmt.Sprintf("[GetMatches] Missing doc for tournament: %d", tournamentID)
 		log.Print(errMsg)
 		return nil, http.StatusInternalServerError, fmt.Errorf(errMsg)
 	}

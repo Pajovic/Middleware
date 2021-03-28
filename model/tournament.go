@@ -15,7 +15,7 @@ type TournamentData struct {
 }
 
 type Tournament struct {
-	ID   int    `json:"_id"`
+	ID   int64  `json:"_id"`
 	Name string `json:"name"`
 	Year string `json:"year"`
 }
