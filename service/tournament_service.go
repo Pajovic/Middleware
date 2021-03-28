@@ -36,7 +36,7 @@ func (service *TournamentService) GetTournaments(serviceID, realCategoryID strin
 		return nil, http.StatusInternalServerError, err
 	}
 	if err = json.Unmarshal(body, &main); err != nil {
-		log.Printf("[GetTournaments] Error unmarshaling tournament %s/%s:  %s", serviceID, realCategoryID, err.Error())
+		log.Printf("[GetTournaments] Error unmarshaling tournament %s/%s: %s", serviceID, realCategoryID, err.Error())
 		return nil, http.StatusInternalServerError, err
 	}
 	if len(main.Doc) == 0 {

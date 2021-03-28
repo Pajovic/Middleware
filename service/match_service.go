@@ -36,6 +36,8 @@ func (service *MatchService) GetMatches(tournamentID, year int64) ([]model.Match
 		return nil, http.StatusInternalServerError, err
 	}
 	if err = json.Unmarshal(body, &main); err != nil {
+		//Common case is that unmarshall failed because there are no matches related to this tournament
+		// and matches struct is empty.
 		log.Printf("[GetMatches] Error unmarshaling tournament %d match: %s", tournamentID, err.Error())
 		return nil, http.StatusOK, nil
 	}
